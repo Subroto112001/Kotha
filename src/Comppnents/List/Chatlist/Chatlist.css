@@ -43,6 +43,11 @@
     -ms-border-radius: 10px;
     -o-border-radius: 10px;
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    font-weight: 700;
 }
 .item{
     display: flex;

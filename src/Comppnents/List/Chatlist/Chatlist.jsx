@@ -1,24 +1,23 @@
 import React, { useState } from "react";
 import "./Chatlist.css";
 import searchImage from "../../../assets/search.png";
-import plus from "../../../assets/plus.png";
-import minus from "../../../assets/minus.png";
 import avatar from "../../../assets/avatar.png";
+
+import { IoSearch } from "react-icons/io5";
+import { CiCircleMinus, CiCirclePlus } from "react-icons/ci";
 const Chatlist = () => {
   const [addMode, setAddmode] = useState(false);
   return (
     <div className="chatlist">
       <div className="search">
         <div className="searchBar">
-          <img className="searchImg" src={searchImage} alt={searchImage} />
+          <IoSearch className="searchImg" />
           <input className="searchInput" type="text" placeholder="Search" />
         </div>
-        <img
-          className="plushicon"
-          src={addMode ? minus : plus}
-          onClick={() => setAddmode((prev) => !prev)}
-          alt={plus}
-        />
+       
+        <div className="plushicon" onClick={() => setAddmode((prev) => !prev)}>
+          {addMode ? <CiCircleMinus /> : <CiCirclePlus />}
+        </div>
       </div>
       <div className="item">
         <img src={avatar} alt={avatar} className="chatavatar" />
