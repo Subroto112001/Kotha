@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import "./Chatlist.css";
 import searchImage from "../../../assets/search.png";
-import plus from '../../../assets/plus.png'
-import minus from '../../../assets/minus.png'
+import plus from "../../../assets/plus.png";
+import minus from "../../../assets/minus.png";
+import avatar from "../../../assets/avatar.png";
 const Chatlist = () => {
-  const [addMode, setAddmode] = useState(false)
+  const [addMode, setAddmode] = useState(false);
   return (
     <div className="chatlist">
       <div className="search">
@@ -12,7 +13,40 @@ const Chatlist = () => {
           <img className="searchImg" src={searchImage} alt={searchImage} />
           <input className="searchInput" type="text" placeholder="Search" />
         </div>
-        <img className="plushicon" src={addMode ? minus:  plus} onClick={()=>setAddmode(prev=> !prev)} alt={plus} />
+        <img
+          className="plushicon"
+          src={addMode ? minus : plus}
+          onClick={() => setAddmode((prev) => !prev)}
+          alt={plus}
+        />
+      </div>
+      <div className="item">
+        <img src={avatar} alt={avatar} />
+        <div className="texts">
+          <span>Jane Doe</span>
+          <p>hello</p>
+        </div>
+      </div>
+      <div className="item">
+        <img src={avatar} alt={avatar} />
+        <div className="texts">
+          <span>Jane Doe</span>
+          <p>hello</p>
+        </div>
+      </div>
+      <div className="item">
+        <img src={avatar} alt={avatar} />
+        <div className="texts">
+          <span>Jane Doe</span>
+          <p>hello</p>
+        </div>
+      </div>
+      <div className="item">
+        <img src={avatar} alt={avatar} />
+        <div className="texts">
+          <span>Jane Doe</span>
+          <p>hello</p>
+        </div>
       </div>
     </div>
   );

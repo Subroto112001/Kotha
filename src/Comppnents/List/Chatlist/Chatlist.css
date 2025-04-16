@@ -1,4 +1,7 @@
-.chatlist{}
+.chatlist{
+    flex: 1;
+    overflow: scroll;
+}
 .search{
     display: flex;
     align-items: center;
@@ -40,4 +43,12 @@
     -ms-border-radius: 10px;
     -o-border-radius: 10px;
     cursor: pointer;
+}
+.item{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    cursor: pointer;
+    border-bottom: 1px solid #dddddd35;
 }
