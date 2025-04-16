@@ -21,31 +21,31 @@ const Chatlist = () => {
         />
       </div>
       <div className="item">
-        <img src={avatar} alt={avatar} />
+        <img src={avatar} alt={avatar} className="chatavatar" />
         <div className="texts">
-          <span>Jane Doe</span>
-          <p>hello</p>
+          <span className="Nameofitem">Jane Doe</span>
+          <p className="msgpart">hello</p>
         </div>
       </div>
       <div className="item">
-        <img src={avatar} alt={avatar} />
+        <img src={avatar} alt={avatar} className="chatavatar" />
         <div className="texts">
-          <span>Jane Doe</span>
-          <p>hello</p>
+          <span className="Nameofitem">Jane Doe</span>
+          <p className="msgpart">hello</p>
         </div>
       </div>
       <div className="item">
-        <img src={avatar} alt={avatar} />
+        <img src={avatar} alt={avatar} className="chatavatar" />
         <div className="texts">
-          <span>Jane Doe</span>
-          <p>hello</p>
+          <span className="Nameofitem">Jane Doe</span>
+          <p className="msgpart">hello</p>
         </div>
       </div>
       <div className="item">
-        <img src={avatar} alt={avatar} />
+        <img src={avatar} alt={avatar} className="chatavatar" />
         <div className="texts">
-          <span>Jane Doe</span>
-          <p>hello</p>
+          <span className="Nameofitem">Jane Doe</span>
+          <p className="msgpart">hello</p>
         </div>
       </div>
     </div>
