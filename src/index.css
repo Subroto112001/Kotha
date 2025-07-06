@@ -1,1 +1,16 @@
 @import "tailwindcss";
+.container{
+    padding: 20px;
+}
+:root{
+    --textgraycolor : #495057;
+    --textminigraycolor: #A3B3C6;
+    --buttonbluecolor : #6159CB;
+    --inputOutlinecolor : #7269EF;
+}
+@theme{
+    --color-textgray: var(--textgraycolor);
+    --color-textminigray: var(--textminigraycolor);
+    --color-buttonblue: var(--buttonbluecolor);
+    --color-inputoutline: var(--inputOutlinecolor);
+}
