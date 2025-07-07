@@ -28,15 +28,18 @@ const Login = () => {
   const HoldValue = (event) => {
     const { id, value } = event.target;
 
-    if (id == "email") {
+    if (id === "email") {
       setemail(value);
-    } else if (id == "username") {
+      setEmailError("");
+    } else if (id === "username") {
       setusername(value);
+      setusernameError("");
     } else if (id === "password") {
       setpassword(value);
+      setPassworError("");
     }
   };
-
+  
   /**
    *
    * todo : this function will work for signup
@@ -71,7 +74,7 @@ const Login = () => {
 
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // Signed up
+        
         const user = userCredential.user;
 
         updateProfile(auth.currentUser, {
@@ -135,10 +138,13 @@ const Login = () => {
         <div className="flex flex-col gap-2 relative">
           <label
             htmlFor="email"
-            className="text-[16px] font-medium text-textgray"
+            className={`text-[16px] font-medium ${
+              emailError ? "text-red-500" : "text-textgray"
+            }`}
           >
-            Email
+            {emailError || "Email"}
           </label>
+
           <input
             type="email"
             id="email"
@@ -155,10 +161,13 @@ const Login = () => {
         <div className="flex flex-col gap-2 relative">
           <label
             htmlFor="username"
-            className="text-[16px] font-medium text-textgray"
+            className={`text-[16px] font-medium ${
+              usernameError ? "text-red-400" : "text-textgray"
+            }`}
           >
-            Username
+            {usernameError || "Username"}
           </label>
+
           <input
             type="text"
             id="username"
@@ -175,10 +184,13 @@ const Login = () => {
         <div className="flex flex-col gap-2 relative">
           <label
             htmlFor="password"
-            className="text-[16px] font-medium text-textgray"
+            className={`text-[16px] font-medium ${
+              passworError ? "text-red-400" : "text-textgray"
+            }`}
           >
-            Password
+            {passworError || "Password"}
           </label>
+
           <input
             type="password"
             id="password"
