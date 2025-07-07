@@ -1,38 +1,108 @@
 import React, { useContext, useState } from "react";
 import { CiChat1, CiLock, CiUser } from "react-icons/ci";
-import { NavLink } from "react-router-dom";
+import { Navigate, NavLink, useNavigate } from "react-router-dom";
 import { Themecontext } from "../Context/Theme";
 import { FiSun } from "react-icons/fi";
 import { PiMoon } from "react-icons/pi";
-import { HiOutlineMail } from "react-icons/hi";
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  sendEmailVerification,
+  updateProfile,
+} from "firebase/auth";
+import { getDatabase, push, ref, set } from "firebase/database";
 import { AiOutlineMail } from "react-icons/ai";
 
 const Login = () => {
-    const { theme, toggleTheme } = useContext(Themecontext);
-    const [email, setemail] = useState("")
-    const [username, setusername] = useState("");
-    const [password, setpassword] = useState("");
-    const [usernameError, setusernameError] = useState("");
-    const [emailError, setEmailError] = useState("");
-    const [passworError, setPassworError] = useState("");
+  const { theme, toggleTheme } = useContext(Themecontext);
+  const [email, setemail] = useState("");
+  const [username, setusername] = useState("");
+  const [password, setpassword] = useState("");
+  const [usernameError, setusernameError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passworError, setPassworError] = useState("");
 
-    const HoldValue = (event) => {
-        const { id, value } = event.target
-     
-        
-        
-        if (id == "email") {
-            setemail(value)
-        }
-        else if (id == "username") {
-            setusername(value);
-        } else if (id === "password") {
-          setpassword(value);
-        }
-        
+  const db = getDatabase();
+  const auth = getAuth();
+  const navigate = useNavigate();
+  const HoldValue = (event) => {
+    const { id, value } = event.target;
+
+    if (id == "email") {
+      setemail(value);
+    } else if (id == "username") {
+      setusername(value);
+    } else if (id === "password") {
+      setpassword(value);
     }
-    console.log(email);
-    
+  };
+
+  /**
+   *
+   * todo : this function will work for signup
+   *
+   * */
+
+  const handleSignup = async () => {
+    if (!email) {
+      setEmailError("Email is missing here");
+      return;
+    }
+    if (!username) {
+      setusernameError("Username is missing here");
+      return;
+    }
+    if (!password) {
+      setPassworError("Password is missing here");
+      return;
+    }
+
+    /**
+     * here if there is no error error state will blank
+     * */
+    setEmailError("");
+    setusernameError("");
+    setPassworError("");
+
+    /**
+     *
+     *  now this section will work for signup
+     * */
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed up
+        const user = userCredential.user;
+
+        updateProfile(auth.currentUser, {
+          displayName: username,
+          photoURL: "",
+        });
+      })
+      .then(() => {
+        let userRef = push(ref(db, "users/"));
+        set(userRef, {
+          username: auth.currentUser.displayName || username,
+          email: auth.currentUser.email || email,
+          profile_picture: "",
+          userUid: auth.currentUser.uid,
+        });
+        sendEmailVerification(auth.currentUser);
+        alert("We sent your email a verification link");
+      })
+      .then(() => {
+        navigate("/login");
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {
+        setemail("");
+        setusername("");
+        setpassword("");
+      });
+  };
+
   return (
     <div
       className={`container relative flex flex-col justify-center items-center h-screen w-full bg-baackgroundcolor ${theme}`}
@@ -91,7 +161,7 @@ const Login = () => {
           </label>
           <input
             type="text"
-            id="usernameuser"
+            id="username"
             className="border p-2 pl-[40px] rounded text-[16px] outline-inputoutline w-[300px]  sm:w-[350px]"
             placeholder="Your Short Name"
             onChange={(e) => HoldValue(e)}
@@ -111,8 +181,10 @@ const Login = () => {
           </label>
           <input
             type="password"
+            id="password"
             className="border p-2 pl-[40px] rounded text-[16px] outline-inputoutline w-[300px]  sm:w-[350px]"
             placeholder="*******"
+            onChange={(e) => HoldValue(e)}
           />
           <span className="absolute top-[43px] left-2  text-[22px]">
             <CiLock />
@@ -121,7 +193,10 @@ const Login = () => {
         {/* password section */}
         {/* login button section */}
         <div className="flex w-full">
-          <button className="w-full py-3 bg-buttonblue text-white rounded cursor-pointer text-[16px] font-normal">
+          <button
+            className="w-full py-3 bg-buttonblue text-white rounded cursor-pointer text-[16px] font-normal"
+            onClick={handleSignup}
+          >
             Sign Up
           </button>
         </div>
