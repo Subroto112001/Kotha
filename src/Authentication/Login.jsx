@@ -1,11 +1,23 @@
-import React from "react";
+import React, { useContext } from "react";
 import { CiChat1, CiLock, CiUser } from "react-icons/ci";
 import { NavLink } from "react-router-dom";
+import { Themecontext } from "../Context/Theme";
+import { PiMoon } from "react-icons/pi";
+import { FiSun } from "react-icons/fi";
 
 const Login = () => {
+  const { theme, toggleTheme } = useContext(Themecontext);
   return (
-    <div className="container flex flex-col justify-center items-center h-screen w-full bg-gray-200">
+    <div
+      className={`container flex flex-col justify-center items-center h-screen w-full bg-baackgroundcolor  ${theme}`}
+    >
       <div className="flex flex-col justify-center items-center gap-3">
+        <button
+          className="bg-buttonblue py-3 px-5 rounded text-white"
+          onClick={toggleTheme}
+        >
+          {theme === "day" ? <PiMoon /> : <FiSun />}
+        </button>
         <div className="flex flex-row gap-1">
           <span className="text-4xl text-inputoutline ">
             <CiChat1 />

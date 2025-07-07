@@ -7,10 +7,21 @@
     --textminigraycolor: #A3B3C6;
     --buttonbluecolor : #6159CB;
     --inputOutlinecolor : #7269EF;
+ 
+}
+.day{
+    --bgcolor: #e5e7eb;
+}
+.night{
+    --bgcolor: #000000e1;
+}
+.bg-baackgroundcolor{
+    background-color: var(--bgcolor);
 }
 @theme{
     --color-textgray: var(--textgraycolor);
     --color-textminigray: var(--textminigraycolor);
     --color-buttonblue: var(--buttonbluecolor);
     --color-inputoutline: var(--inputOutlinecolor);
+    --color-backgroundcolor: var(--bgcolor)
 }

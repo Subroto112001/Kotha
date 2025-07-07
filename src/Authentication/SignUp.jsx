@@ -1,10 +1,50 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { CiChat1, CiLock, CiUser } from "react-icons/ci";
 import { NavLink } from "react-router-dom";
+import { Themecontext } from "../Context/Theme";
+import { FiSun } from "react-icons/fi";
+import { PiMoon } from "react-icons/pi";
+import { HiOutlineMail } from "react-icons/hi";
+import { AiOutlineMail } from "react-icons/ai";
 
 const Login = () => {
+    const { theme, toggleTheme } = useContext(Themecontext);
+    const [email, setemail] = useState("")
+    const [username, setusername] = useState("");
+    const [password, setpassword] = useState("");
+    const [usernameError, setusernameError] = useState("");
+    const [emailError, setEmailError] = useState("");
+    const [passworError, setPassworError] = useState("");
+
+    const HoldValue = (event) => {
+        const { id, value } = event.target
+     
+        
+        
+        if (id == "email") {
+            setemail(value)
+        }
+        else if (id == "username") {
+            setusername(value);
+        } else if (id === "password") {
+          setpassword(value);
+        }
+        
+    }
+    console.log(email);
+    
   return (
-    <div className="container flex flex-col justify-center items-center h-screen w-full bg-gray-200">
+    <div
+      className={`container relative flex flex-col justify-center items-center h-screen w-full bg-baackgroundcolor ${theme}`}
+    >
+      <div className="absolute top-3.5 left-2.5">
+        <button
+          className="  bg-buttonblue py-3 px-5 rounded text-white"
+          onClick={toggleTheme}
+        >
+          {theme === "day" ? <PiMoon /> : <FiSun />}
+        </button>
+      </div>
       <div className="flex flex-col justify-center items-center gap-3">
         <div className="flex flex-row gap-1">
           <span className="text-4xl text-inputoutline ">
@@ -20,18 +60,41 @@ const Login = () => {
       </div>
 
       <div className="flex flex-col mt-6 gap-3.5  p-8 bg-white  rounded-md hover:border hover:border-inputoutline">
-        {/* username section */}
+        {/* email section */}
+
         <div className="flex flex-col gap-2 relative">
           <label
             htmlFor="email"
             className="text-[16px] font-medium text-textgray"
           >
-            Username
+            Email
           </label>
           <input
             type="email"
+            id="email"
             className="border p-2 pl-[40px] rounded text-[16px] outline-inputoutline w-[300px]  sm:w-[350px]"
             placeholder="example@mail.com"
+            onChange={(e) => HoldValue(e)}
+          />
+          <span className="absolute top-[43px] left-2  text-[22px]">
+            <AiOutlineMail />
+          </span>
+        </div>
+        {/* email section */}
+        {/* username section */}
+        <div className="flex flex-col gap-2 relative">
+          <label
+            htmlFor="username"
+            className="text-[16px] font-medium text-textgray"
+          >
+            Username
+          </label>
+          <input
+            type="text"
+            id="usernameuser"
+            className="border p-2 pl-[40px] rounded text-[16px] outline-inputoutline w-[300px]  sm:w-[350px]"
+            placeholder="Your Short Name"
+            onChange={(e) => HoldValue(e)}
           />
           <span className="absolute top-[43px] left-2  text-[22px]">
             <CiUser />
@@ -41,13 +104,13 @@ const Login = () => {
         {/* password section */}
         <div className="flex flex-col gap-2 relative">
           <label
-            htmlFor="email"
+            htmlFor="password"
             className="text-[16px] font-medium text-textgray"
           >
             Password
           </label>
           <input
-            type="email"
+            type="password"
             className="border p-2 pl-[40px] rounded text-[16px] outline-inputoutline w-[300px]  sm:w-[350px]"
             placeholder="*******"
           />
