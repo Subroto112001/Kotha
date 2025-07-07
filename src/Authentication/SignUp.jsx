@@ -13,9 +13,9 @@ const Login = () => {
           <h2 className="text-2xl text-textgray font-bold">Kotha</h2>
         </div>
 
-        <h1 className="text-2xl text-textgray font-bold">Login</h1>
+        <h1 className="text-2xl text-textgray font-bold">Sign Up</h1>
         <p className="text-md text-textgray font-medium">
-          Sign in to continue to Kotha.
+          Get your Kotha account now
         </p>
       </div>
 
@@ -30,7 +30,7 @@ const Login = () => {
           </label>
           <input
             type="email"
-            className="border p-2 pl-[40px] rounded text-[16px] outline-inputoutline w-[300px] sm:w-[350px]"
+            className="border p-2 pl-[40px] rounded text-[16px] outline-inputoutline w-[300px]  sm:w-[350px]"
             placeholder="example@mail.com"
           />
           <span className="absolute top-[43px] left-2  text-[22px]">
@@ -48,7 +48,7 @@ const Login = () => {
           </label>
           <input
             type="email"
-            className="border p-2 pl-[40px] rounded text-[16px] outline-inputoutline w-[300px] sm:w-[350px]"
+            className="border p-2 pl-[40px] rounded text-[16px] outline-inputoutline w-[300px]  sm:w-[350px]"
             placeholder="*******"
           />
           <span className="absolute top-[43px] left-2  text-[22px]">
@@ -59,18 +59,17 @@ const Login = () => {
         {/* login button section */}
         <div className="flex w-full">
           <button className="w-full py-3 bg-buttonblue text-white rounded cursor-pointer text-[16px] font-normal">
-            Log In
+            Sign Up
           </button>
         </div>
         {/* login button section */}
-
         <h3 className="text-[16px] text-textgray">
-          Don't have an account?{" "}
+          Already have an account?{" "}
           <NavLink
-            to={"/signup"}
+            to={"/login"}
             className="text-[16px] font-medium cursor-pointer text-red-400"
           >
-            SignUp Here
+            Login Here
           </NavLink>
         </h3>
       </div>
