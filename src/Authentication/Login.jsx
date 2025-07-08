@@ -37,10 +37,17 @@ const Login = () => {
 
   const HandlTakelogininfo = (e) => {
     const { id, value } = e.target;
-    setLogininfo({
-      ...logininfo,
+
+    setLogininfo((prev) => ({
+      ...prev,
       [id]: value,
-    });
+    }));
+
+    // Clear the corresponding error when the user types
+    setloginError((prevError) => ({
+      ...prevError,
+      [`${id}Error`]: value ? "" : prevError[`${id}Error`],
+    }));
     console.log(`your id is ${id} and your value is ${value}`);
   };
 
@@ -127,6 +134,7 @@ const Login = () => {
           <span className="absolute top-[43px] left-2  text-[22px]">
             <CiUser />
           </span>
+          <h3 className="text-red-500 text-sm">{loginError.EmailError}</h3>
         </div>
         {/* username section */}
         {/* password section */}
@@ -147,6 +155,7 @@ const Login = () => {
           <span className="absolute top-[43px] left-2  text-[22px]">
             <CiLock />
           </span>
+          <h3 className="text-red-500 text-sm">{loginError.PasswordError}</h3>
         </div>
         {/* password section */}
         {/* login button section */}
