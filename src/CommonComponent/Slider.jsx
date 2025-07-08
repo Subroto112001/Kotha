@@ -43,7 +43,7 @@ const Slider = () => {
     }
   const { theme, toggleTheme } = useContext(Themecontext);
   return (
-    <div className="bg-themebackgroundcolor flex sm:flex-col gap-6 justify-center items-center w-full sm:h-[94vh] rounded-t-md sm:rounded-l-lg p-3">
+    <div className="bg-themebackgroundcolor flex sm:flex-col gap-6 justify-center items-center w-full sm:h-[94vh] rounded-t-md sm:rounded-l-lg px-3.5 py-2.5 sm:p-3">
       <div className="flex justify-center items-center">
         <button
           className="  bg-buttonblue py-3 px-5 rounded-full sm:rounded text-white"
