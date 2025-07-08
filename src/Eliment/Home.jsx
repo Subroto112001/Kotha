@@ -56,7 +56,7 @@ const Home = () => {
           <Profile />
         </div>
       ) : (
-        <div className="w-[90%] h-[96vh]">
+        <div className="w-[100%] h-[96vh]">
           <Outlet />
         </div>
       )}

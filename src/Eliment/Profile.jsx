@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { getDatabase, ref, onValue, update } from "firebase/database";
 import { getAuth } from "firebase/auth";
-import { MdOutlineCloudUpload } from 'react-icons/md';
+import { MdOutlineCloudUpload, MdOutlineMail } from 'react-icons/md';
+import { FaUserFriends } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 const Profile = () => {
 const db=getDatabase()
     const auth = getAuth()
     const [user, setUser]=useState({})
 
-
+const navigate = useNavigate()
 /**
  * 
  * todo : this function is working to fetch user data
@@ -89,16 +91,34 @@ const db=getDatabase()
     }, []);
   return (
     <div className="bg-themebackgroundcolor p-6 h-full rounded-b-md sm:rounded-r-md">
-      <div className="w-[100px] h-[100px] rounded-full bg-amber-50 relative">
-        <picture>
-          <img
-            src={user && user.profile_picture}
-            alt={user.profile_picture}
-            className="w-full h-full rounded-full object-cover"
-          />
-        </picture>
-        <button className="text-4xl absolute cursor-pointer top-[40%] left-[25%] text-white transition-all opacity-0 duration-200 hover:opacity-100" onClick={handleimageUpload}>
-          <MdOutlineCloudUpload />
+      <div className="flex flex-row justify-between items-center">
+        <div className="flex flex-row gap-3 items-center">
+          <div className="w-[40px] sm:w-[100px] h-[40px] sm:h-[100px] rounded-full bg-white relative border-2 border-buttonblue cursor-pointer">
+            <picture>
+              <img
+                src={user && user.profile_picture}
+                alt={user.profile_picture}
+                className="w-full h-full rounded-full object-cover"
+              />
+            </picture>
+
+            <button
+              className="text-[16px] sm:text-3xl absolute cursor-pointer top-[30%] sm:top-[45%] left-[25%] sm:left-[35%] text-black transition-all opacity-0 duration-200 hover:opacity-100"
+              onClick={handleimageUpload}
+            >
+              <MdOutlineCloudUpload />
+            </button>
+          </div>
+          <div>
+            <h3 className="text-white text-2xl font-medium">{user.username}</h3>
+           
+          </div>
+        </div>
+        <button
+          className="bg-buttonblue py-2 px-3 rounded-full sm:rounded text-white text-2xl"
+          onClick={() => navigate("/friends")}
+        >
+          <FaUserFriends />
         </button>
       </div>
     </div>

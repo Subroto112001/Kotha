@@ -10,6 +10,7 @@ import Theme from './Context/Theme';
 import Message from "./Eliment/Message"
 import Notificaton from './Eliment/Notificaton';
 import Settings from './Eliment/Settings';
+import Friends from './Eliment/Friends';
 const App = () => {
   return (
     <Theme>
@@ -22,6 +23,7 @@ const App = () => {
               <Route path="/notification" element={<Notificaton />} />
               <Route path="/message" element={<Message />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/friends" element={<Friends />} />
             </Route>
           </Route>
         </Routes>
