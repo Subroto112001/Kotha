@@ -28,7 +28,14 @@ const Home = () => {
   const sliderComponent = useMemo(() => <Slider />, []);
 
   if (!user) {
-    return <div>Please log in to access this page.</div>;
+    return <div>Please log in to access this page.
+      <NavLink
+                  to={"/login"}
+                  className="text-[16px] font-medium cursor-pointer text-red-400"
+                >
+                  login Here
+                </NavLink>
+    </div>;
   }
 
   if (user && !user.emailVerified) {
