@@ -1,13 +1,86 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { CiChat1, CiLock, CiUser } from "react-icons/ci";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { Themecontext } from "../Context/Theme";
 import { PiMoon } from "react-icons/pi";
 import { FiSun } from "react-icons/fi";
-
-
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from "firebase/auth";
+import { getDatabase, push, ref, set } from "firebase/database";
 const Login = () => {
+  const auth = getAuth();
+  const db = getDatabase();
+  const navigate = useNavigate();
   const { theme, toggleTheme } = useContext(Themecontext);
+
+  const [logininfo, setLogininfo] = useState({
+    Email: "",
+    Password: "",
+  });
+
+  const [loginError, setloginError] = useState({
+    EmailError: "",
+    PasswordError: "",
+  });
+
+  /**
+   *
+   * todo : this function will take value from input
+   * and keep it a state
+   *
+   * */
+
+  const HandlTakelogininfo = (e) => {
+    const { id, value } = e.target;
+    setLogininfo({
+      ...logininfo,
+      [id]: value,
+    });
+    console.log(`your id is ${id} and your value is ${value}`);
+  };
+
+  /**
+   *
+   * todo : this function will work for login
+   *
+   * */
+
+  const handleLogin = () => {
+    // there will handle the error first
+    const { Email, Password } = logininfo;
+    if (!Email) {
+      setloginError({
+        ...loginError,
+        EmailError: "Please Enter Your Email",
+      });
+    } else if (!Password) {
+      setloginError({
+        ...loginError,
+        EmailError: "",
+        PasswordError: "Please Enter Your Password",
+      });
+    } else {
+      setloginError({
+        ...loginError,
+        EmailError: "",
+        PasswordError: "",
+      });
+    }
+
+    signInWithEmailAndPassword(auth, Email, Password)
+      .then((userinfo) => {
+        console.log(userinfo);
+        navigate("/");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <div
       className={`container relative flex flex-col justify-center items-center h-screen w-full bg-baackgroundcolor  ${theme}`}
@@ -38,15 +111,17 @@ const Login = () => {
         {/* username section */}
         <div className="flex flex-col gap-2 relative">
           <label
-            htmlFor="email"
+            htmlFor="Email"
             className="text-[16px] font-medium text-textgray"
           >
             Username
           </label>
           <input
             type="email"
+            id="Email"
             className="border p-2 pl-[40px] rounded text-[16px] outline-inputoutline w-[300px] sm:w-[350px]"
             placeholder="example@mail.com"
+            onChange={HandlTakelogininfo}
           />
           <span className="absolute top-[43px] left-2  text-[22px]">
             <CiUser />
@@ -56,15 +131,17 @@ const Login = () => {
         {/* password section */}
         <div className="flex flex-col gap-2 relative">
           <label
-            htmlFor="email"
+            htmlFor="Password"
             className="text-[16px] font-medium text-textgray"
           >
             Password
           </label>
           <input
-            type="email"
+            type="Password"
+            id="Password"
             className="border p-2 pl-[40px] rounded text-[16px] outline-inputoutline w-[300px] sm:w-[350px]"
             placeholder="*******"
+            onChange={HandlTakelogininfo}
           />
           <span className="absolute top-[43px] left-2  text-[22px]">
             <CiLock />
@@ -73,7 +150,10 @@ const Login = () => {
         {/* password section */}
         {/* login button section */}
         <div className="flex w-full">
-          <button className="w-full py-3 bg-buttonblue text-white rounded cursor-pointer text-[16px] font-normal">
+          <button
+            onClick={handleLogin}
+            className="w-full py-3 bg-buttonblue text-white rounded cursor-pointer text-[16px] font-normal"
+          >
             Log In
           </button>
         </div>
