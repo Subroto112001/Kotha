@@ -7,6 +7,9 @@ import Login from './Authentication/Login';
 import SignUp from "./Authentication/SignUp";
 import Theme from './Context/Theme';
 
+import Message from "./Eliment/Message"
+import Notificaton from './Eliment/Notificaton';
+import Settings from './Eliment/Settings';
 const App = () => {
   return (
     <Theme>
@@ -15,7 +18,11 @@ const App = () => {
           <Route index path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/" element={<PageRouter />}>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Home />}>
+              <Route path="/notification" element={<Notificaton />} />
+              <Route path="/message" element={<Message />} />
+              <Route path="/settings" element={<Settings />} />
+            </Route>
           </Route>
         </Routes>
       </BrowserRouter>
