@@ -1,8 +1,7 @@
 import React from 'react'
 import { FaUserPlus } from 'react-icons/fa';
 
-const UserCard = ({ name,  imageUrl }) => {
-  
+const UserCard = ({ name, imageUrl, clickFunction }) => {
   return (
     <div className="flex flex-row items-center justify-between gap-4 p-3 bg-white rounded  ">
       <div className="flex flex-row items-center gap-4">
@@ -17,9 +16,9 @@ const UserCard = ({ name,  imageUrl }) => {
           <h3 className="font-medium text-[16px]">{name}</h3>
         </div>
       </div>
-      <div className='text-2xl text-buttonblue'>
+      <button className="text-2xl text-buttonblue" onClick={clickFunction}>
         <FaUserPlus />
-      </div>
+      </button>
     </div>
   );
 };

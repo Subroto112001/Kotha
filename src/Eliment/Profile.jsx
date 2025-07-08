@@ -140,8 +140,8 @@ useEffect(() => {
           <FaUserFriends />
         </button>
       </div>
-      <div className='mt-5'>
-        <User everyUser={allUser} />
+      <div className="mt-5">
+        <User everyUser={allUser} currentuser={user} />
       </div>
     </div>
   );
