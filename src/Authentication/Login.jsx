@@ -11,6 +11,7 @@ import {
   GoogleAuthProvider,
 } from "firebase/auth";
 import { getDatabase, push, ref, set } from "firebase/database";
+import Button from "../Component/Button";
 const Login = () => {
   const auth = getAuth();
   const db = getDatabase();
@@ -150,12 +151,7 @@ const Login = () => {
         {/* password section */}
         {/* login button section */}
         <div className="flex w-full">
-          <button
-            onClick={handleLogin}
-            className="w-full py-3 bg-buttonblue text-white rounded cursor-pointer text-[16px] font-normal"
-          >
-            Log In
-          </button>
+          <Button HandleClik={handleLogin} Vlaue={"Login"} />
         </div>
         {/* login button section */}
 

@@ -12,6 +12,7 @@ import {
 } from "firebase/auth";
 import { getDatabase, push, ref, set } from "firebase/database";
 import { AiOutlineMail } from "react-icons/ai";
+import Button from "../Component/Button";
 
 const Login = () => {
   const { theme, toggleTheme } = useContext(Themecontext);
@@ -205,12 +206,8 @@ const Login = () => {
         {/* password section */}
         {/* login button section */}
         <div className="flex w-full">
-          <button
-            className="w-full py-3 bg-buttonblue text-white rounded cursor-pointer text-[16px] font-normal"
-            onClick={handleSignup}
-          >
-            Sign Up
-          </button>
+         
+          <Button HandleClik={handleSignup} Vlaue={"Sign Up"} />
         </div>
         {/* login button section */}
         <h3 className="text-[16px] text-textgray">

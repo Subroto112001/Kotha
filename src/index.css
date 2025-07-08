@@ -7,6 +7,7 @@
     --textminigraycolor: #A3B3C6;
     --buttonbluecolor : #6159CB;
     --inputOutlinecolor : #7269EF;
+    --backgroundcolor : #dde0e5;
  
 }
 .day{
@@ -23,5 +24,6 @@
     --color-textminigray: var(--textminigraycolor);
     --color-buttonblue: var(--buttonbluecolor);
     --color-inputoutline: var(--inputOutlinecolor);
-    --color-backgroundcolor: var(--bgcolor)
+    --color-backgroundcolor: var(--bgcolor);
+    --color-themebackgroundcolor: var(--backgroundcolor);
 }
