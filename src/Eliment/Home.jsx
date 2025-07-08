@@ -1,12 +1,22 @@
-import React, { useContext, useMemo } from "react";
+import React, { useContext, useMemo, useEffect, useState } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import Slider from "../CommonComponent/Slider";
 import { Themecontext } from "../Context/Theme";
 import Profile from "./Profile";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const Home = () => {
   const { theme, toggleTheme } = useContext(Themecontext);
   const location = useLocation();
+  const auth = getAuth();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, [auth]);
 
   // this segment will check the path of page
   const isRootPath = useMemo(
@@ -16,6 +26,14 @@ const Home = () => {
 
   // is anything change in page slider will not render unnessery
   const sliderComponent = useMemo(() => <Slider />, []);
+
+  if (!user) {
+    return <div>Please log in to access this page.</div>;
+  }
+
+  if (user && !user.emailVerified) {
+    return <div>Please verify your email to access this page.</div>;
+  }
 
   return (
     <div
