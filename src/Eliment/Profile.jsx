@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { getDatabase, ref, onValue, update } from "firebase/database";
+import { getDatabase, ref, onValue, update, off } from "firebase/database";
 import { getAuth } from "firebase/auth";
 import { MdOutlineCloudUpload, MdOutlineMail } from 'react-icons/md';
 import { FaUserFriends } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import User from './User';
 const Profile = () => {
 const db=getDatabase()
     const auth = getAuth()
-    const [user, setUser]=useState({})
+  const [user, setUser] = useState({})
+  const [allUser, setallUser]= useState({})
 
 const navigate = useNavigate()
 /**
@@ -17,25 +19,43 @@ const navigate = useNavigate()
 
 
 
-    useEffect(() => {
-        const fetchProfiledata = () =>{
-            const ProfeUser = ref(db, "users/");
-            onValue(ProfeUser, (snapshot) => {
-                let Profileuserblanarry = []
-                snapshot.forEach((item) => {
-                    if (item.val().userUid === auth.currentUser.uid) {
-                      Profileuserblanarry = {
-                        ...item.val(),
-                        userKey: item.key,
-                      };
-                    }
-                })
-                setUser(Profileuserblanarry);
-            })
-        } 
-        fetchProfiledata();
-    }, [])
-    console.log(user);
+useEffect(() => {
+  const fetchProfiledata = () => {
+    const ProfeUser = ref(db, "users/");
+    onValue(ProfeUser, (snapshot) => {
+      let Profileuserblanarry = null; // For the current user's data
+      let EveryuserlistBlankarry = []; // For all users' data
+
+      snapshot.forEach((item) => {
+        const userData = {
+          ...item.val(),
+          userKey: item.key,
+        };
+
+        // Add each user to the array
+        EveryuserlistBlankarry.push(userData);
+
+        // Check for the current user's data
+        if (item.val().userUid === auth.currentUser.uid) {
+          Profileuserblanarry = userData;
+        }
+      });
+
+      // Update state with the collected data
+      setUser(Profileuserblanarry);
+      setallUser(EveryuserlistBlankarry);
+    });
+  };
+
+  fetchProfiledata();
+
+  // Cleanup the listener on unmount
+  return () => {
+    const ProfeUser = ref(db, "users/");
+    off(ProfeUser); // Remove the onValue listener
+  };
+}, []);
+    
     
 
 
@@ -90,7 +110,7 @@ const navigate = useNavigate()
       document.body.appendChild(script);
     }, []);
   return (
-    <div className="bg-themebackgroundcolor p-6 h-full rounded-b-md sm:rounded-r-md">
+    <div className="bg-themebackgroundcolor p-6 h-full rounded-b-md sm:rounded-r-md ">
       <div className="flex flex-row justify-between items-center">
         <div className="flex flex-row gap-3 items-center">
           <div className="w-[40px] sm:w-[100px] h-[40px] sm:h-[100px] rounded-full bg-white relative border-2 border-buttonblue cursor-pointer">
@@ -110,8 +130,7 @@ const navigate = useNavigate()
             </button>
           </div>
           <div>
-            <h3 className="text-white text-2xl font-medium">{user.username}</h3>
-           
+            <h3 className="text-white text-xl font-medium">{user.username}</h3>
           </div>
         </div>
         <button
@@ -120,6 +139,9 @@ const navigate = useNavigate()
         >
           <FaUserFriends />
         </button>
+      </div>
+      <div className='mt-5'>
+        <User everyUser={allUser} />
       </div>
     </div>
   );
