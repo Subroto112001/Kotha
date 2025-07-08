@@ -47,10 +47,10 @@ const Slider = () => {
           {theme === "day" ? <PiMoon /> : <FiSun />}
         </button>
       </div>
-      <div className="flex justify-center  sm:flex-col gap-6 items-center ml-[8px] sm:ml-[0] ">
+      <div className="flex justify-center  sm:flex-col gap-6 items-center ml-[8px] sm:ml-[0] overflow-x-auto  no-scrollbar ">
         {slideBaritem.map((item) => (
           <div
-            className="bg-buttonblue py-3 px-5 rounded-full sm:rounded text-white"
+            className="bg-buttonblue py-2.5 px-4 rounded-full sm:rounded text-white"
             onClick={() => pageNavigator(item.path)}
           >
             {item.icon}

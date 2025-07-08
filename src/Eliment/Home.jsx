@@ -47,7 +47,7 @@ const Home = () => {
 
   return (
     <div
-      className={`container bg-baackgroundcolor ${theme} h-screen flex flex-col sm:flex-row gap-2.5 `}
+      className={`container bg-baackgroundcolor ${theme} h-screen flex flex-col sm:flex-row gap-2.5 relative`}
     >
       <div className="sm:w-[8%]">{sliderComponent}</div>
 
@@ -60,6 +60,10 @@ const Home = () => {
           <Outlet />
         </div>
       )}
+
+      <h3 className="absolute bottom-[22px] text-white font-normal left-[25%] sm:left-[45%]">
+        Powered By @BarmanTech
+      </h3>
     </div>
   );
 };
