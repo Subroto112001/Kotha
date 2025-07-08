@@ -12,6 +12,7 @@ import {
 } from "firebase/auth";
 import { getDatabase, push, ref, set } from "firebase/database";
 import Button from "../Component/Button";
+
 const Login = () => {
   const auth = getAuth();
   const db = getDatabase();
@@ -28,13 +29,6 @@ const Login = () => {
     PasswordError: "",
   });
 
-  /**
-   *
-   * todo : this function will take value from input
-   * and keep it a state
-   *
-   * */
-
   const HandlTakelogininfo = (e) => {
     const { id, value } = e.target;
 
@@ -43,7 +37,6 @@ const Login = () => {
       [id]: value,
     }));
 
-    // Clear the corresponding error when the user types
     setloginError((prevError) => ({
       ...prevError,
       [`${id}Error`]: value ? "" : prevError[`${id}Error`],
@@ -51,14 +44,7 @@ const Login = () => {
     console.log(`your id is ${id} and your value is ${value}`);
   };
 
-  /**
-   *
-   * todo : this function will work for login
-   *
-   * */
-
   const handleLogin = () => {
-    // there will handle the error first
     const { Email, Password } = logininfo;
     if (!Email) {
       setloginError({
@@ -77,16 +63,41 @@ const Login = () => {
         EmailError: "",
         PasswordError: "",
       });
-    }
 
-    signInWithEmailAndPassword(auth, Email, Password)
-      .then((userinfo) => {
-        console.log(userinfo);
-        navigate("/");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      signInWithEmailAndPassword(auth, Email, Password)
+        .then((userinfo) => {
+          const user = userinfo.user;
+          if (user.emailVerified) {
+            console.log(userinfo);
+            navigate("/");
+          } else {
+            setloginError({
+              EmailError: "",
+              PasswordError: "Please verify your email before logging in.",
+            });
+            auth.signOut(); // Optionally sign out the unverified user
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          if (error.code === "auth/user-not-found") {
+            setloginError({
+              EmailError: "User not found.",
+              PasswordError: "",
+            });
+          } else if (error.code === "auth/wrong-password") {
+            setloginError({
+              EmailError: "",
+              PasswordError: "Incorrect password.",
+            });
+          } else {
+            setloginError({
+              EmailError: "An error occurred. Please try again.",
+              PasswordError: "",
+            });
+          }
+        });
+    }
   };
 
   return (
@@ -116,7 +127,6 @@ const Login = () => {
       </div>
 
       <div className="flex flex-col mt-6 gap-3.5  p-8 bg-white  rounded-md hover:border hover:border-inputoutline">
-        {/* username section */}
         <div className="flex flex-col gap-2 relative">
           <label
             htmlFor="Email"
@@ -136,8 +146,6 @@ const Login = () => {
           </span>
           <h3 className="text-red-500 text-sm">{loginError.EmailError}</h3>
         </div>
-        {/* username section */}
-        {/* password section */}
         <div className="flex flex-col gap-2 relative">
           <label
             htmlFor="Password"
@@ -157,12 +165,9 @@ const Login = () => {
           </span>
           <h3 className="text-red-500 text-sm">{loginError.PasswordError}</h3>
         </div>
-        {/* password section */}
-        {/* login button section */}
         <div className="flex w-full">
           <Button HandleClik={handleLogin} Vlaue={"Login"} />
         </div>
-        {/* login button section */}
 
         <h3 className="text-[16px] text-textgray">
           Don't have an account?{" "}
