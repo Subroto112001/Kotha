@@ -28,14 +28,17 @@ const Home = () => {
   const sliderComponent = useMemo(() => <Slider />, []);
 
   if (!user) {
-    return <div className="flex justify-center items-center">Please log in to access this page.
-      <NavLink
-                  to={"/login"}
-                  className="text-[16px] font-medium cursor-pointer text-red-400"
-                >
-                  login Here
-                </NavLink>
-    </div>;
+    return (
+      <div className="flex flex-col h-screen justify-center items-center">
+        <h3>Please log in to access this page. </h3>
+        <NavLink
+          to={"/login"}
+          className="text-[16px] font-medium cursor-pointer text-red-400"
+        >
+          Click To Login Here
+        </NavLink>
+      </div>
+    );
   }
 
   if (user && !user.emailVerified) {
