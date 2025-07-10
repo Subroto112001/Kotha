@@ -1,12 +1,12 @@
-import React from "react";
-import { FaUserPlus } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
+import { FaUserMinus, FaUserPlus } from "react-icons/fa";
 import { getAuth } from "firebase/auth";
-import { getDatabase, push, ref, set } from "firebase/database";
+import { getDatabase,onValue, push, ref, set } from "firebase/database";
 
 const User = ({ everyUser, currentuser }) => {
   const auth = getAuth();
   const db = getDatabase();
-
+  const [frRequestdata, setfrRequestdata] = useState([]);
   const handleFriendRequest = (user) => {
     set(push(ref(db, "friendRequest/")), {
       // sender information
@@ -24,9 +24,35 @@ const User = ({ everyUser, currentuser }) => {
       RecevierUserUid: user.userUid,
     });
   };
+  /**
+   * todo : this funcntion will fetch data from  friend request data
+   * */
 
+
+  useEffect(() => {
+    const fetchFriendRequestdata = () => {
+      const FriendRequest = ref(db, "friendRequest/");
+      onValue(FriendRequest, (snapshot) => {
+        let FriendrequBlankArry = [];
+
+        snapshot.forEach((item) => {
+          const data = item.val();
+          if (auth.currentUser?.uid === data.RecevierUserUid) {
+            FriendrequBlankArry.push({
+              ...data,
+              userKey: item.key,
+            });
+          }
+        });
+
+        setfrRequestdata(FriendrequBlankArry);
+      });
+    };
+
+    fetchFriendRequestdata();
+  }, [auth.currentUser]);
   return (
-    <div className="flex flex-col gap-3 overflow-y-auto max-h-[400px] sm:max-h-[480px] no-scrollbar">
+    <div className="flex flex-col gap-3 overflow-y-auto max-h-[400px] sm:max-h-[480px] no-scrollbar rounded-md">
       {everyUser && Array.isArray(everyUser) ? (
         everyUser.map((item) => (
           <div key={item.userKey}>
@@ -43,12 +69,21 @@ const User = ({ everyUser, currentuser }) => {
                   <h3 className="font-medium text-[16px]">{item.username}</h3>
                 </div>
               </div>
-              <button
-                className="text-2xl text-buttonblue"
-                onClick={() => handleFriendRequest(item)}
-              >
-                <FaUserPlus />
-              </button>
+
+              {frRequestdata.includes(item.userUid) ? (
+                // friend request remove code
+                <button className="text-2xl text-buttonblue">
+                  <FaUserMinus />
+                </button>
+              ) : (
+                <button
+                  className="text-2xl text-buttonblue"
+                  onClick={() => handleFriendRequest(item)}
+                >
+                  {" "}
+                  <FaUserPlus />
+                </button>
+              )}
             </div>
           </div>
         ))
