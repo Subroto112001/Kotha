@@ -27,3 +27,12 @@
     --color-backgroundcolor: var(--bgcolor);
     --color-themebackgroundcolor: var(--backgroundcolor);
 }
+@layer utilities {
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none; 
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none; 
+    }
+  }

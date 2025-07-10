@@ -33,7 +33,9 @@ useEffect(() => {
         };
 
         // Add each user to the array
+        if (item.val().userUid !== auth.currentUser.uid) {
         EveryuserlistBlankarry.push(userData);
+      }
 
         // Check for the current user's data
         if (item.val().userUid === auth.currentUser.uid) {
@@ -140,7 +142,7 @@ useEffect(() => {
           <FaUserFriends />
         </button>
       </div>
-      <div className="mt-5">
+      <div className="mt-5 overflow-hidden">
         <User everyUser={allUser} currentuser={user} />
       </div>
     </div>
