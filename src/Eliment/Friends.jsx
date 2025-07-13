@@ -1,74 +1,43 @@
-import { getAuth } from "firebase/auth";
-import { getDatabase, onValue, ref } from "firebase/database";
-import React, { useEffect, useState } from "react";
-import { FaUserPlus } from "react-icons/fa";
+import React, { useMemo } from 'react'
+import { FaUserFriends, FaUserPlus } from 'react-icons/fa';
+import { LiaUserFriendsSolid } from 'react-icons/lia';
+import { Outlet, useNavigate } from 'react-router-dom';
+import MyFriends from './Friends/MyFriends';
 
 const Friends = () => {
-  const [frRequestdata, setfrRequestdata] = useState([]);
-
-  const db = getDatabase();
-  const auth = getAuth();
-
-  useEffect(() => {
-    const fetchFriendRequestdata = () => {
-      const FriendRequest = ref(db, "friendRequest/");
-      onValue(FriendRequest, (snapshot) => {
-        let FriendrequBlankArry = [];
-
-        snapshot.forEach((item) => {
-          const data = item.val();
-          if (auth.currentUser?.uid === data.RecevierUserUid) {
-            FriendrequBlankArry.push({
-              ...data,
-              userKey: item.key,
-            });
-          }
-        });
-
-        setfrRequestdata(FriendrequBlankArry);
-      });
-    };
-
-    fetchFriendRequestdata();
-  }, [auth.currentUser]); 
-
+const navigate = useNavigate()
+ const isRootPath = useMemo(
+   () => location.pathname === "/friends",
+   [location.pathname]
+ );
   return (
     <div className="bg-themebackgroundcolor w-full p-6 h-full rounded-b-md sm:rounded-r-md">
-      <div className="flex flex-col">
-        <h3 className="font-medium text-[22px] text-white">Friend Request</h3>
-
-        <div className="flex flex-col gap-3 overflow-y-auto max-h-[200px] sm:max-h-[280px] no-scrollbar rounded-md mt-2">
-          {frRequestdata.length > 0 ? (
-            frRequestdata.map((item) => (
-              <div key={item.userKey}>
-                <div className="flex flex-row items-center justify-between gap-4 p-2 bg-white rounded">
-                  <div className="flex flex-row items-center gap-4">
-                    <div className="w-[35px] h-[35px] sm:w-[45px] sm:h-[45px] rounded-full">
-                      <img
-                        src={item.senderProfilePicture}
-                        alt={`${item.SenderName}'s profile`}
-                        className="w-full h-full rounded-full border-2 border-buttonblue"
-                      />
-                    </div>
-                    <div className="card-content">
-                      <h3 className="font-medium text-[16px]">
-                        {item.SenderName}
-                      </h3>
-                    </div>
-                  </div>
-                  <button className="text-2xl text-buttonblue">
-                    <FaUserPlus />
-                  </button>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p className="text-white mt-4">No friend requests.</p>
-          )}
-        </div>
+      <div className="flex flex-row gap-1 sm:gap-2.5 items-center">
+        <button
+          className="bg-buttonblue py-2 px-3 rounded-full sm:rounded text-white text-2xl flex items-center gap-2"
+          onClick={() => navigate("/friends/myfriends")}
+        >
+          <LiaUserFriendsSolid />{" "}
+          <h3 className="text-[18px]  font-medium">Friends</h3>
+        </button>
+        <button
+          className="bg-buttonblue py-2 px-3 rounded-full sm:rounded text-white text-xl flex items-center gap-2"
+          onClick={() => navigate("/friends/suggetions")}
+        >
+          <FaUserFriends />
+          <h3 className="text-[18px]  font-medium">Suggetions</h3>
+        </button>
+        <button
+          className="bg-buttonblue py-2 px-3 rounded-full sm:rounded text-white text-xl flex items-center gap-2"
+          onClick={() => navigate("/friends/friendsrequest")}
+        >
+          <FaUserPlus />
+          <h3 className="text-[18px]  font-medium">Request</h3>
+        </button>
       </div>
+      {isRootPath ? <MyFriends /> : <Outlet />}
     </div>
   );
-};
+}
 
-export default Friends;
+export default Friends
