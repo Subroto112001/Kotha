@@ -1,97 +1,106 @@
+import {
+  getDatabase,
+  onValue,
+  ref,
+  push,
+  set,
+  remove,
+} from "firebase/database";
 import { getAuth } from "firebase/auth";
-import { getDatabase, onValue, ref } from "firebase/database";
 import React, { useEffect, useState } from "react";
-import { FaUserPlus } from "react-icons/fa";
-import { HiDotsVertical } from "react-icons/hi";
 
 const FriendsRequest = () => {
   const [frRequestdata, setfrRequestdata] = useState([]);
-
   const db = getDatabase();
   const auth = getAuth();
 
+  /* ---------------- realtime subscription ---------------- */
   useEffect(() => {
-    const fetchFriendRequestdata = () => {
-      const FriendRequest = ref(db, "friendRequest/");
-      onValue(FriendRequest, (snapshot) => {
-        let FriendrequBlankArry = [];
-
-        snapshot.forEach((item) => {
-          const data = item.val();
-          if (auth.currentUser?.uid === data.RecevierUserUid) {
-            FriendrequBlankArry.push({
-              ...data,
-              userKey: item.key,
-            });
-          }
-        });
-
-        setfrRequestdata(FriendrequBlankArry);
+    const FriendRequest = ref(db, "friendRequest/");
+    const unsubscribe = onValue(FriendRequest, (snapshot) => {
+      const incoming = [];
+      snapshot.forEach((snap) => {
+        const data = snap.val();
+        if (auth.currentUser?.uid === data.RecevierUserUid) {
+          incoming.push({ ...data, userKey: snap.key });
+        }
       });
-    };
+      setfrRequestdata(incoming);
+    });
 
-    fetchFriendRequestdata();
-  }, [auth.currentUser]);
-const [acceptdel, setAcceptdel] = useState(false)
-  /**
-   *
-   * todo : this function will work for handleRequestJSX
-   * */
+    // clean‑up
+    return () => unsubscribe();
+  }, [auth.currentUser?.uid, db]);
 
-  const handleRequestJSX = () => {
-    setAcceptdel(!acceptdel);
-  }
-  console.log(acceptdel)
+  /* ---------------- handlers ---------------- */
+  const handleAccept = async (req) => {
+    try {
+      // 1️⃣ add both users to a friends list
+      const newFriendRef = push(ref(db, "friends"));
+      await set(newFriendRef, {
+        userOneUid: req.SenderUserUid,
+        userTwoUid: req.RecevierUserUid,
+        createdAt: Date.now(),
+      });
+
+      // 2️⃣ remove pending request
+      await remove(ref(db, `friendRequest/${req.userKey}`));
+    } catch (err) {
+      console.error("Failed to accept friend:", err);
+      // 👉🏽 optionally surface a toast/snackbar here
+    }
+  };
+
+  const handleRemove = async (requestKey) => {
+    try {
+      await remove(ref(db, `friendRequest/${requestKey}`));
+    } catch (err) {
+      console.error("Failed to remove request:", err);
+    }
+  };
+
+  /* ---------------- UI ---------------- */
   return (
-    <div className="bg-themebackgroundcolor w-full  p-6 rounded-b-md sm:rounded-r-md">
-      <div className="flex flex-col">
-        <h3 className="font-medium text-[22px] text-white">Friend Request</h3>
+    <div className="bg-themebackgroundcolor w-full p-6 rounded-b-md sm:rounded-r-md">
+      <h3 className="font-medium text-[22px] text-white">Friend Request</h3>
 
-        <div className="flex flex-col gap-3 overflow-y-auto h-full  no-scrollbar rounded-md mt-2">
-          {frRequestdata.length > 0 ? (
-            frRequestdata.map((item) => (
-              <div key={item.userKey} className="">
-                <div className="flex flex-row items-center justify-between gap-4 p-2 bg-white rounded relative">
-                  <div className="flex flex-row items-center gap-4">
-                    <div className="w-[35px] h-[35px] sm:w-[45px] sm:h-[45px] rounded-full">
-                      <img
-                        src={item.senderProfilePicture}
-                        alt={`${item.SenderName}'s profile`}
-                        className="w-full h-full rounded-full border-2 border-buttonblue"
-                      />
-                    </div>
-                    <div className="card-content">
-                      <h3 className="font-medium text-[16px]">
-                        {item.SenderName}
-                      </h3>
-                    </div>
-                  </div>
-                  <button
-                    className="text-2xl text-buttonblue"
-                    onClick={handleRequestJSX}
-                  >
-                    <HiDotsVertical />
-                  </button>
-
-                  {acceptdel ? (
-                    <div className="flex flex-col gap-1 top-full right-0  absolute  z-10 bg-white shadow-md p-2 rounded">
-                      <button className="bg-buttonblue p-2 w-[100px] rounded text-white font-medium">
-                        Accept
-                      </button>
-                      <button className="bg-red-500 p-2 w-[100px] rounded text-white font-medium">
-                        Remove
-                      </button>
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                </div>
+      <div className="flex flex-col gap-3 overflow-y-auto h-full no-scrollbar rounded-md mt-2">
+        {frRequestdata.length ? (
+          frRequestdata.map((item) => (
+            <div
+              key={item.userKey}
+              className="flex items-center justify-between gap-4 p-2 bg-white rounded"
+            >
+              <div className="flex items-center gap-4">
+                <img
+                  src={item.senderProfilePicture}
+                  alt={`${item.SenderName}'s profile`}
+                  className="w-[45px] h-[45px] rounded-full border-2 border-buttonblue object-cover"
+                />
+                <span className="font-medium text-[16px]">
+                  {item.SenderName}
+                </span>
               </div>
-            ))
-          ) : (
-            <p className="text-white mt-4">No friend requests.</p>
-          )}
-        </div>
+
+              <div className="flex gap-2">
+                <button
+                  onClick={() => handleAccept(item)}
+                  className="bg-buttonblue px-3 py-1 rounded text-white font-medium"
+                >
+                  Accept
+                </button>
+                <button
+                  onClick={() => handleRemove(item.userKey)}
+                  className="bg-red-500 px-3 py-1 rounded text-white font-medium"
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p className="text-white mt-4">No friend requests.</p>
+        )}
       </div>
     </div>
   );
