@@ -1,15 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { getDatabase, onValue, ref, get } from "firebase/database";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const FriendsSidebar = ({ onSelectFriend, selectedFriend }) => {
   const [friends, setFriends] = useState([]);
   const [users, setUsers] = useState({});
-  const auth = getAuth();
+  const [uid, setUid] = useState(null);
   const db = getDatabase();
 
   useEffect(() => {
-    const uid = auth.currentUser?.uid;
+    const unsubscribe = onAuthStateChanged(getAuth(), (user) => {
+      if (user) setUid(user.uid);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (!uid) return;
+
     const friendsRef = ref(db, "friends");
 
     const unsub = onValue(friendsRef, async (snapshot) => {
@@ -30,7 +38,7 @@ const FriendsSidebar = ({ onSelectFriend, selectedFriend }) => {
     });
 
     return () => unsub();
-  }, []);
+  }, [uid]);
 
   const getUserInfo = (uid) =>
     Object.values(users).find((user) => user.userUid === uid);

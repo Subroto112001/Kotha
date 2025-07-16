@@ -1,24 +1,20 @@
 import React, { useState } from "react";
 import FriendsSidebar from "./Friends/FriendsSlidebar";
-import ChatWindow from "./Friends/ChatWindow";
+import ChatWindow from "./Friends//ChatWindow";
+import { FaBars } from "react-icons/fa";
 
-/**
- * On phones ( <768px ) the sidebar is a slide‑in drawer.
- * On tablets/desktop it’s fixed on the left.
- */
-const Messaging = () => {
+const Message = () => {
   const [selectedFriend, setSelectedFriend] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  /* close drawer after friend click */
   const handleSelectFriend = (friend) => {
     setSelectedFriend(friend);
     setSidebarOpen(false);
   };
 
   return (
-    <div className="h-screen w-full bg-gray-100 md:flex overflow-hidden">
-      {/*  ░░ Overlay ░░ */}
+    <div className="h-screen w-full bg-gray-100 md:flex overflow-hidden relative">
+      {/* Overlay on mobile */}
       {sidebarOpen && (
         <div
           onClick={() => setSidebarOpen(false)}
@@ -26,12 +22,12 @@ const Messaging = () => {
         />
       )}
 
-      {/*  ░░ SIDEBAR ░░ */}
+      {/* Sidebar */}
       <div
         className={`fixed z-30 inset-y-0 left-0 w-72 max-w-[80%] bg-white shadow-lg transform
-                    transition-transform duration-300
-                    ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
-                    md:static md:translate-x-0 md:w-80`}
+        transition-transform duration-300
+        ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+        md:static md:translate-x-0 md:w-80`}
       >
         <FriendsSidebar
           onSelectFriend={handleSelectFriend}
@@ -39,8 +35,21 @@ const Messaging = () => {
         />
       </div>
 
-      {/*  ░░ CHAT ░░ */}
-      <div className="flex-1 h-full flex flex-col">
+      {/* Chat Panel */}
+      <div className="flex-1 h-full flex flex-col relative">
+        {/* Show hamburger when no friend selected (mobile) */}
+        {!selectedFriend && (
+          <div className="md:hidden p-3 border-b bg-white flex items-center gap-3">
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="text-xl text-gray-700"
+            >
+              <FaBars />
+            </button>
+            <h2 className="text-base font-semibold">Select a friend to chat</h2>
+          </div>
+        )}
+
         {selectedFriend ? (
           <ChatWindow
             friend={selectedFriend}
@@ -56,4 +65,4 @@ const Messaging = () => {
   );
 };
 
-export default Messaging;
+export default Message;
