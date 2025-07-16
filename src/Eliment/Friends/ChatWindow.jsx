@@ -65,7 +65,7 @@ const ChatWindow = ({ friend, onOpenSidebar }) => {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-[85vh]">
       {/* Header */}
       <div className="p-4 border-b bg-white shadow-sm flex items-center gap-3">
         <button

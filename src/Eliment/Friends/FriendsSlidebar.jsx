@@ -44,9 +44,16 @@ const FriendsSidebar = ({ onSelectFriend, selectedFriend }) => {
     Object.values(users).find((user) => user.userUid === uid);
 
   return (
-    <div className="p-3">
-      <h3 className="text-lg font-semibold mb-3">Friends</h3>
-      <div className="flex flex-col gap-1">
+    <div className="p-4 bg-white shadow rounded-md h-full flex flex-col">
+      <h3 className="text-xl font-semibold mb-4 border-b pb-2">Friends</h3>
+
+      <div className="flex flex-col gap-2 overflow-y-auto flex-1">
+        {friends.length === 0 && (
+          <p className="text-gray-500 text-center mt-10">
+            No friends found
+          </p>
+        )}
+
         {friends.map((uid) => {
           const friend = getUserInfo(uid);
           if (!friend) return null;
@@ -57,16 +64,20 @@ const FriendsSidebar = ({ onSelectFriend, selectedFriend }) => {
             <div
               key={uid}
               onClick={() => onSelectFriend(friend)}
-              className={`flex items-center gap-3 p-2 rounded cursor-pointer transition ${
-                isActive ? "bg-blue-100" : "hover:bg-gray-100"
-              }`}
+              className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition
+                ${
+                  isActive
+                    ? "bg-blue-600 text-white"
+                    : "hover:bg-blue-100 text-gray-800"
+                }
+              `}
             >
               <img
                 src={friend.profile_picture}
                 alt={friend.username}
-                className="w-10 h-10 rounded-full border object-cover"
+                className="w-12 h-12 rounded-full border-2 border-blue-600 object-cover"
               />
-              <span className="font-medium">{friend.username}</span>
+              <span className="font-semibold text-lg">{friend.username}</span>
             </div>
           );
         })}

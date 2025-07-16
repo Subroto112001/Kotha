@@ -13,7 +13,7 @@ const Message = () => {
   };
 
   return (
-    <div className="h-screen w-full bg-gray-100 md:flex overflow-hidden relative">
+    <div className="h-[86vh] w-full bg-gray-100 md:flex overflow-hidden relative">
       {/* Overlay on mobile */}
       {sidebarOpen && (
         <div
