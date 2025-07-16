@@ -68,8 +68,8 @@ const FriendsRequest = () => {
 
   // 🧱 UI
   return (
-    <div className="bg-themebackgroundcolor w-full h-[83vh] p-6 rounded-b-md sm:rounded-r-md">
-      <h3 className="font-medium text-[22px] text-white">Friend Request</h3>
+    <div className="bg-themebackgroundcolor w-full h-[83vh] sm:h-[96vh] p-6 rounded-b-md sm:rounded-r-md">
+      <h3 className="font-medium text-[22px] text-white">Notification</h3>
 
       <div className="flex flex-col gap-3 overflow-y-auto h-full no-scrollbar rounded-md mt-2">
         {frRequestdata.length ? (
@@ -106,7 +106,7 @@ const FriendsRequest = () => {
             </div>
           ))
         ) : (
-          <p className="text-white mt-4">No friend requests.</p>
+          <p className="text-white mt-4">No Notification.</p>
         )}
       </div>
     </div>
