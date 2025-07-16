@@ -7,9 +7,9 @@ import {
   push,
   serverTimestamp,
 } from "firebase/database";
-import { FaPaperPlane, FaBars } from "react-icons/fa";
+import { FaArrowLeft, FaPaperPlane } from "react-icons/fa";
 
-const ChatWindow = ({ friend, onOpenSidebar }) => {
+const ChatWindow = ({ friend, onBack }) => {
   const auth = getAuth();
   const db = getDatabase();
 
@@ -19,7 +19,7 @@ const ChatWindow = ({ friend, onOpenSidebar }) => {
 
   const threadId = [auth.currentUser.uid, friend.userUid].sort().join("_");
 
-  // 📡 Fetch messages
+  // Realtime fetch messages
   useEffect(() => {
     const msgRef = ref(db, `messages/${threadId}`);
     return onValue(msgRef, (s) => {
@@ -30,12 +30,12 @@ const ChatWindow = ({ friend, onOpenSidebar }) => {
     });
   }, [threadId]);
 
-  // ⬇️ Auto-scroll to latest
+  // Scroll to bottom
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // 📨 Send message
+  // Send message
   const send = () => {
     if (!text.trim()) return;
     push(ref(db, `messages/${threadId}`), {
@@ -48,47 +48,46 @@ const ChatWindow = ({ friend, onOpenSidebar }) => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-gray-50">
+    <div className="flex flex-col h-full bg-gray-100">
       {/* ░░ Header ░░ */}
-      <div className="flex items-center gap-3 p-3 border-b bg-white shadow-sm sticky top-0 z-10">
-        {/* ☰ Mobile hamburger */}
+      <div className="flex items-center gap-3 px-4 py-3 bg-white border-b shadow-sm sticky top-0 z-10">
+        {/* Back button on mobile */}
         <button
-          onClick={onOpenSidebar}
-          className="md:hidden text-2xl text-gray-700 focus:outline-none"
-          title="Open friend list"
+          onClick={onBack}
+          className="md:hidden text-xl text-gray-700"
+          title="Back"
         >
-          <FaBars />
+          <FaArrowLeft />
         </button>
 
-        {/* Profile + Name */}
         <img
           src={friend.profile_picture}
           alt={friend.username}
-          className="w-10 h-10 rounded-full object-cover border"
+          className="w-10 h-10 rounded-full border object-cover"
         />
-        <h2 className="text-base sm:text-lg font-semibold">
+        <h2 className="text-base sm:text-lg font-semibold text-gray-800">
           {friend.username}
         </h2>
       </div>
 
-      {/* ░░ Messages Area ░░ */}
-      <div className="flex-1 overflow-y-auto px-3 py-2">
+      {/* ░░ Messages ░░ */}
+      <div className="flex-1 overflow-y-auto px-4 py-3">
         {messages.length === 0 && (
           <p className="text-center text-sm text-gray-400 mt-6">
             No messages yet.
           </p>
         )}
         {messages.map((m, i) => {
-          const isMine = m.senderUid === auth.currentUser.uid;
+          const mine = m.senderUid === auth.currentUser.uid;
           return (
             <div
               key={i}
-              className={`max-w-[85%] sm:max-w-[70%] whitespace-pre-wrap break-words px-3 py-2 rounded-lg mb-2 text-sm sm:text-base
-              ${
-                isMine
-                  ? "ml-auto bg-blue-600 text-white"
-                  : "mr-auto bg-white text-gray-800 border"
-              }`}
+              className={`max-w-[75%] text-sm sm:text-base px-4 py-2 rounded-2xl mb-3 shadow 
+                ${
+                  mine
+                    ? "ml-auto bg-blue-500 text-white"
+                    : "mr-auto bg-white text-gray-800 border"
+                }`}
             >
               {m.text}
             </div>
@@ -97,15 +96,15 @@ const ChatWindow = ({ friend, onOpenSidebar }) => {
         <div ref={bottomRef} />
       </div>
 
-      {/* ░░ Message Input ░░ */}
-      <div className="p-3 border-t bg-white">
-        <div className="flex gap-2">
+      {/* ░░ Input ░░ */}
+      <div className="p-4 bg-white border-t">
+        <div className="flex items-center gap-2">
           <textarea
-            className="flex-1 resize-none border rounded-md p-2 max-h-32 focus:outline-none text-sm sm:text-base"
+            className="flex-1 resize-none text-sm p-2 border rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-300"
+            placeholder="Type a message..."
             rows={1}
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="Type a message..."
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
@@ -115,7 +114,7 @@ const ChatWindow = ({ friend, onOpenSidebar }) => {
           />
           <button
             onClick={send}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded flex items-center justify-center"
+            className="bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-full shadow transition-all"
             title="Send"
           >
             <FaPaperPlane />
