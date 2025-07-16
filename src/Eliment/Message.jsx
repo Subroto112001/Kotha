@@ -2,43 +2,56 @@ import React, { useState } from "react";
 import FriendsSidebar from "./Friends/FriendsSlidebar";
 import ChatWindow from "./Friends/ChatWindow";
 
+/**
+ * On phones ( <768px ) the sidebar is a slide‑in drawer.
+ * On tablets/desktop it’s fixed on the left.
+ */
 const Messaging = () => {
   const [selectedFriend, setSelectedFriend] = useState(null);
-  const [showChat, setShowChat] = useState(false); // For mobile toggle
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const handleFriendSelect = (friend) => {
+  /* close drawer after friend click */
+  const handleSelectFriend = (friend) => {
     setSelectedFriend(friend);
-    setShowChat(true); // Show chat on mobile
+    setSidebarOpen(false);
   };
 
   return (
-    <div className="w-full h-[96vh] bg-white md:flex">
-      {/* Friend List */}
-      {!showChat && (
-        <div className="w-full md:w-[30%] border-r overflow-y-auto">
-          <FriendsSidebar
-            onSelectFriend={handleFriendSelect}
-            selectedFriend={selectedFriend}
-          />
-        </div>
+    <div className="h-screen w-full bg-gray-100 md:flex overflow-hidden">
+      {/*  ░░ Overlay ░░ */}
+      {sidebarOpen && (
+        <div
+          onClick={() => setSidebarOpen(false)}
+          className="fixed inset-0 bg-black/40 z-20 md:hidden"
+        />
       )}
 
-      {/* Chat Window */}
-      {selectedFriend && showChat && (
-        <div className="w-full md:flex-1">
+      {/*  ░░ SIDEBAR ░░ */}
+      <div
+        className={`fixed z-30 inset-y-0 left-0 w-72 max-w-[80%] bg-white shadow-lg transform
+                    transition-transform duration-300
+                    ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+                    md:static md:translate-x-0 md:w-80`}
+      >
+        <FriendsSidebar
+          onSelectFriend={handleSelectFriend}
+          selectedFriend={selectedFriend}
+        />
+      </div>
+
+      {/*  ░░ CHAT ░░ */}
+      <div className="flex-1 h-full flex flex-col">
+        {selectedFriend ? (
           <ChatWindow
             friend={selectedFriend}
-            onBack={() => setShowChat(false)} // only for mobile
+            onOpenSidebar={() => setSidebarOpen(true)}
           />
-        </div>
-      )}
-
-      {/* Placeholder */}
-      {!selectedFriend && !showChat && (
-        <div className="hidden md:flex flex-1 items-center justify-center text-gray-400">
-          Select a friend to chat
-        </div>
-      )}
+        ) : (
+          <div className="flex-1 flex items-center justify-center text-gray-500">
+            Select a friend to start chatting
+          </div>
+        )}
+      </div>
     </div>
   );
 };
