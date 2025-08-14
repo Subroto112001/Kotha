@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { getDatabase, ref, onValue, update, off } from "firebase/database";
 import { getAuth } from "firebase/auth";
 import { MdOutlineCloudUpload, MdOutlineMail } from 'react-icons/md';
-import { FaUserFriends } from 'react-icons/fa';
+import { FaUserFriends, FaUserPlus } from 'react-icons/fa';
 import { NavLink, useNavigate } from 'react-router-dom';
 import User from './User';
 const Profile = () => {
@@ -141,9 +141,12 @@ useEffect(() => {
 
      fetchFriendRequestdata();
    }, [auth.currentUser]); 
-console.log(frRequestdata);
+
+  
+  
+  
  return (
-   <div className="bg-themebackgroundcolor p-6 h-full rounded-b-md sm:rounded-r-md ">
+   <div className="bg-themebackgroundcolor p-6 h-full rounded-b-md sm:rounded-r-md border border-inputoutline">
      <div className="flex flex-row justify-between items-center">
        <div className="flex flex-row gap-3 items-center">
          <div className="w-[40px] sm:w-[100px] h-[40px] sm:h-[100px] rounded-full bg-white relative border-2 border-buttonblue cursor-pointer">
@@ -167,40 +170,13 @@ console.log(frRequestdata);
          </div>
        </div>
        <button
-         className="bg-buttonblue py-2 px-3 rounded-full sm:rounded text-white text-2xl"
+         className="bg-buttonblue py-2 px-3 rounded-full sm:rounded text-white text-2xl cursor-pointer"
          onClick={() => navigate("/friends")}
        >
          <FaUserFriends />
        </button>
      </div>
-     <div className="cardBox flex flex-row justify-between items-center gap-2 mt-5">
-       <NavLink
-         to={"/friendsRequest"}
-         className="bg-baackgroundcolor leftside p-2.5 rounded w-full"
-       >
-         <h3 className="text-[16px] font-medium">
-           {" "}
-           Friends Request{" "}
-           <span className="text-red-400 bg-white rounded-full p-1 ml-1">
-             {frRequestdata.length || "0"}
-           </span>
-         </h3>
-       </NavLink>
-       <NavLink
-         to={"/friends"}
-         className="bg-baackgroundcolor rightside p-2.5 rounded w-full "
-       >
-         <h3 className="text-[16px] font-medium">
-           Friends
-           <span className="text-red-400 bg-white rounded-full p-1 ml-1">
-             0
-           </span>
-         </h3>
-       </NavLink>
-     </div>
-     {/* <div className="mt-5 overflow-hidden">
-        <User everyUser={allUser} currentuser={user} />
-      </div> */}
+    
    </div>
  );
 }

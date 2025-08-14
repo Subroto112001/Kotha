@@ -38,10 +38,10 @@ const Slider = () => {
   };
   const { theme, toggleTheme } = useContext(Themecontext);
   return (
-    <div className="bg-themebackgroundcolor flex flex-row sm:flex-col gap-6 justify-center items-center w-full sm:h-[96vh] rounded-t-md sm:rounded-t-[0] sm:rounded-l-lg px-3.5 py-2.5 sm:p-3">
+    <div className="bg-themebackgroundcolor border border-inputoutline flex flex-row sm:flex-col gap-6 justify-center items-center w-full sm:h-[96vh] rounded-t-md sm:rounded-t-[0] sm:rounded-l-lg px-3.5 py-2.5 sm:p-3">
       <div className="flex justify-center items-center">
         <button
-          className="  bg-buttonblue py-3 px-5 rounded-full sm:rounded text-white"
+          className="bg-buttonblue py-3 px-5 rounded-full sm:rounded text-white cursor-pointer"
           onClick={toggleTheme}
         >
           {theme === "day" ? <PiMoon /> : <FiSun />}
@@ -49,8 +49,9 @@ const Slider = () => {
       </div>
       <div className="flex justify-center  sm:flex-col gap-6 items-center ml-[8px] sm:ml-[0] overflow-x-auto  no-scrollbar ">
         {slideBaritem.map((item) => (
-          <div
-            className="bg-buttonblue py-2.5 px-4 rounded-full sm:rounded text-white"
+          <div key={item.id}
+           
+            className="bg-buttonblue cursor-pointer py-2.5 px-4 rounded-full sm:rounded text-white r"
             onClick={() => pageNavigator(item.path)}
           >
             {item.icon}
