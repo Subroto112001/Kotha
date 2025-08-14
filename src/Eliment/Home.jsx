@@ -1,9 +1,12 @@
 import React, { useContext, useMemo, useEffect, useState } from "react";
-import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Slider from "../CommonComponent/Slider";
 import { Themecontext } from "../Context/Theme";
 import Profile from "./Profile";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import LoginError from "../Error/loginError";
+
+
 
 const Home = () => {
   const { theme, toggleTheme } = useContext(Themecontext);
@@ -28,17 +31,7 @@ const Home = () => {
   const sliderComponent = useMemo(() => <Slider />, []);
 
   if (!user) {
-    return (
-      <div className="flex flex-col h-screen justify-center items-center">
-        <h3>Please log in to access this page. </h3>
-        <NavLink
-          to={"/login"}
-          className="text-[16px] font-medium cursor-pointer text-red-400"
-        >
-          Click To Login Here
-        </NavLink>
-      </div>
-    );
+    return <LoginError />;
   }
 
   if (user && !user.emailVerified) {

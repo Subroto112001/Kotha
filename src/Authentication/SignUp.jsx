@@ -11,7 +11,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { getDatabase, push, ref, set } from "firebase/database";
-import { AiOutlineMail } from "react-icons/ai";
+import { AiOutlineLoading3Quarters, AiOutlineMail } from "react-icons/ai";
 import Button from "../Component/Button";
 
 const Login = () => {
@@ -22,6 +22,7 @@ const Login = () => {
   const [usernameError, setusernameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passworError, setPassworError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const db = getDatabase();
   const auth = getAuth();
@@ -40,7 +41,7 @@ const Login = () => {
       setPassworError("");
     }
   };
-  
+
   /**
    *
    * todo : this function will work for signup
@@ -48,16 +49,20 @@ const Login = () => {
    * */
 
   const handleSignup = async () => {
+    setLoading(true);
     if (!email) {
       setEmailError("Email is missing here");
+      setLoading(false);
       return;
     }
     if (!username) {
       setusernameError("Username is missing here");
+      setLoading(false);
       return;
     }
     if (!password) {
       setPassworError("Password is missing here");
+      setLoading(false);
       return;
     }
 
@@ -75,7 +80,6 @@ const Login = () => {
 
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        
         const user = userCredential.user;
 
         updateProfile(auth.currentUser, {
@@ -95,6 +99,8 @@ const Login = () => {
         alert("We sent your email a verification link");
       })
       .then(() => {
+        console.log("signup");
+        
         navigate("/login");
       })
       .catch((error) => {
@@ -104,6 +110,7 @@ const Login = () => {
         setemail("");
         setusername("");
         setpassword("");
+        setLoading(false);
       });
   };
 
@@ -124,12 +131,28 @@ const Login = () => {
           <span className="text-4xl text-inputoutline ">
             <CiChat1 />
           </span>
-          <h2 className="text-2xl text-textgray font-bold">Kotha</h2>
+          <h2
+            className={`text-2xl  font-bold ${
+              theme === "night" ? "text-white" : "text-textgray"
+            }`}
+          >
+            Kotha
+          </h2>
         </div>
 
-        <h1 className="text-2xl text-textgray font-bold">Sign Up</h1>
-        <p className="text-md text-textgray font-medium">
-          Get your Kotha account now
+        <h1
+          className={`text-2xl  font-bold ${
+            theme === "night" ? "text-white" : "text-textgray"
+          }`}
+        >
+          Sign Up
+        </h1>
+        <p
+          className={`text-md font-medium ${
+            theme === "night" ? "text-white" : "text-textgray"
+          }`}
+        >
+          Signup and Get your Kotha account now
         </p>
       </div>
 
@@ -206,8 +229,16 @@ const Login = () => {
         {/* password section */}
         {/* login button section */}
         <div className="flex w-full">
-         
-          <Button HandleClik={handleSignup} Vlaue={"Sign Up"} />
+          <button
+            onClick={handleSignup}
+            className="w-full py-3 bg-buttonblue text-white flex justify-center items-center rounded cursor-pointer text-[16px] font-normal"
+          >
+            {loading ? (
+              <AiOutlineLoading3Quarters className="animate-spin" />
+            ) : (
+              "Signup"
+            )}
+          </button>
         </div>
         {/* login button section */}
         <h3 className="text-[16px] text-textgray">

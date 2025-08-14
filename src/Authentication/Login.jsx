@@ -12,13 +12,14 @@ import {
 } from "firebase/auth";
 import { getDatabase, push, ref, set } from "firebase/database";
 import Button from "../Component/Button";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const Login = () => {
   const auth = getAuth();
   const db = getDatabase();
   const navigate = useNavigate();
   const { theme, toggleTheme } = useContext(Themecontext);
-
+  const [loading, setLoading] = useState(false);
   const [logininfo, setLogininfo] = useState({
     Email: "",
     Password: "",
@@ -44,19 +45,31 @@ const Login = () => {
     console.log(`your id is ${id} and your value is ${value}`);
   };
 
+  /**
+   *title : Handle Login
+   *@desc : this function work for login
+   */
+
   const handleLogin = () => {
+    setLoading(true);
+   
+
     const { Email, Password } = logininfo;
     if (!Email) {
       setloginError({
         ...loginError,
         EmailError: "Please Enter Your Email",
       });
+      setLoading(false);
+      return;
     } else if (!Password) {
       setloginError({
         ...loginError,
         EmailError: "",
         PasswordError: "Please Enter Your Password",
       });
+      setLoading(false);
+      return;
     } else {
       setloginError({
         ...loginError,
@@ -68,7 +81,7 @@ const Login = () => {
         .then((userinfo) => {
           const user = userinfo.user;
           if (user.emailVerified) {
-            console.log(userinfo);
+            
             navigate("/");
           } else {
             setloginError({
@@ -96,9 +109,13 @@ const Login = () => {
               PasswordError: "",
             });
           }
+        })
+        .finally(() => {
+          setLoading(false); // এখন শুধু শেষে false হবে
         });
     }
   };
+
 
   return (
     <div
@@ -106,7 +123,7 @@ const Login = () => {
     >
       <div className="absolute top-3.5 left-2.5">
         <button
-          className="bg-buttonblue py-3 px-5 rounded text-white"
+          className="bg-buttonblue py-3 px-5 rounded text-white cursor-pointer"
           onClick={toggleTheme}
         >
           {theme === "day" ? <PiMoon /> : <FiSun />}
@@ -117,12 +134,26 @@ const Login = () => {
           <span className="text-4xl text-inputoutline ">
             <CiChat1 />
           </span>
-          <h2 className="text-2xl text-textgray font-bold">Kotha</h2>
+          <h2
+            className={`text-2xl  font-bold ${
+              theme === "night" ? "text-white" : "text-textgray"
+            }`}
+          >
+            Kotha
+          </h2>
         </div>
 
-        <h1 className="text-2xl text-textgray font-bold">Login</h1>
-        <p className="text-md text-textgray font-medium">
-          Sign in to continue to Kotha.
+        <h1
+          className={`text-2xl  font-bold ${
+            theme === "night" ? "text-white" : "text-textgray"
+          }`}
+        >
+          Login
+        </h1>
+        <p className={`text-md font-medium ${
+            theme === "night" ? "text-white" : "text-textgray"
+          }`}>
+          Login to continue to Kotha.
         </p>
       </div>
 
@@ -166,7 +197,18 @@ const Login = () => {
           <h3 className="text-red-500 text-sm">{loginError.PasswordError}</h3>
         </div>
         <div className="flex w-full">
-          <Button HandleClik={handleLogin} Vlaue={"Login"} />
+          <button
+            onClick={handleLogin}
+            className="w-full py-3 bg-buttonblue text-white flex justify-center items-center rounded cursor-pointer text-[16px] font-normal"
+          >
+            {loading ? (
+            
+                <AiOutlineLoading3Quarters className="animate-spin" />
+         
+            ) : (
+              "Login"
+            )}
+          </button>
         </div>
 
         <h3 className="text-[16px] text-textgray">
@@ -183,4 +225,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default React.memo(Login);
