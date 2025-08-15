@@ -1,5 +1,6 @@
 @import "tailwindcss";
 .container{
+    margin: auto;
     padding: 20px;
 }
 :root{

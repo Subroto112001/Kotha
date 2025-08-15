@@ -54,9 +54,7 @@ const Home = () => {
         </div>
       )}
 
-      <h3 className="absolute bottom-[22px] text-white font-normal left-[25%] sm:left-[45%]">
-        Powered By @BarmanTech
-      </h3>
+      
     </div>
   );
 };
